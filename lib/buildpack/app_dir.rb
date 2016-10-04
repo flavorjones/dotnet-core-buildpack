@@ -46,12 +46,16 @@ module AspNetCoreBuildpack
 
     def deployment_file_project
       paths = with_project_json
+      puts "MIKE: paths: #{paths.inspect}"
       deployment_file = File.expand_path(File.join(@dir, DEPLOYMENT_FILE_NAME))
+      puts "MIKE: deployment_file: #{deployment_file.inspect}"
       File.foreach(deployment_file, encoding: 'utf-8') do |line|
+        puts "MIKE: line #{line.inspect}"
         m = /project[ \t]*=[ \t]*(.*)/i.match(line)
         if m
           n = /.*([.](xproj|csproj))/i.match(m[1])
           path = n ? Pathname.new(File.dirname(m[1])) : Pathname.new(m[1])
+          puts "MIKE: path #{path.inspect}"
           return path if paths.include?(path)
         end
       end if File.exist?(deployment_file)
